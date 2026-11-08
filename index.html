@@ -6,61 +6,93 @@
   <title>AR Anatomy Viewer</title>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   <style>
-    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #f0f0f0; font-family: sans-serif; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #0f172a; font-family: system-ui, -apple-system, sans-serif; }
     model-viewer { width: 100%; height: 100%; }
     
-    /* Model selector dropdown styling */
-    #model-selector {
+    /* Cool Floating Glassmorphism Container */
+    .selector-container {
       position: absolute;
-      top: 20px;
+      top: 24px;
       left: 50%;
       transform: translateX(-50%);
-      background: white;
-      padding: 10px 16px;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      font-size: 15px;
-      font-weight: bold;
-      border: none;
-      outline: none;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 6px;
+      border-radius: 35px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       z-index: 100;
-      cursor: pointer;
+      display: flex;
+      align-items: center;
     }
 
-    /* AR Button styling */
+    #model-selector {
+      background: transparent;
+      padding: 10px 36px 10px 18px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1e293b;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    /* Custom Dropdown Arrow */
+    .selector-container::after {
+      content: '▼';
+      font-size: 10px;
+      color: #64748b;
+      position: absolute;
+      right: 18px;
+      pointer-events: none;
+    }
+
+    /* Premium AR Button */
     #ar-button {
-      background: #014BAA;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: white;
       border: none;
-      padding: 14px 28px;
+      padding: 14px 30px;
       position: absolute;
-      bottom: 30px;
+      bottom: 35px;
       left: 50%;
       transform: translateX(-50%);
-      border-radius: 30px;
+      border-radius: 35px;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 700;
+      letter-spacing: 0.5px;
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
       z-index: 100;
+      transition: transform 0.2s ease;
+    }
+
+    #ar-button:active {
+      transform: translateX(-50%) scale(0.96);
     }
   </style>
 </head>
 <body>
 
-  <!-- Dropdown to switch between Heart and Lungs -->
-  <select id="model-selector" onchange="document.getElementById('viewer').src = this.value">
-    <option value="heart.glb">❤️ Human Heart</option>
-    <option value="lungs.glb">🫁 Human Lungs</option>
-  </select>
+  <!-- Cool Floating Dropdown -->
+  <div class="selector-container">
+    <select id="model-selector" onchange="document.getElementById('viewer').src = this.value">
+      <option value="heart.glb">❤️ Human Heart Model</option>
+      <option value="lungs.glb">🫁 Human Lungs Model</option>
+    </select>
+  </div>
 
   <!-- Model Viewer Element -->
   <model-viewer id="viewer" src="heart.glb" alt="Anatomy Model"
-    camera-controls auto-rotate
+    camera-controls auto-rotate shadow-intensity="1"
     ar ar-modes="webxr scene-viewer quick-look">
     
     <button id="ar-button" slot="ar-button">
-      View in your space 🚪
+      View in your space
     </button>
   </model-viewer>
 
