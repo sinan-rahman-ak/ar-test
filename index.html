@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AR Heart Test</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <style>
+    body { margin: 0; width: 100vw; height: 100vh; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <model-viewer src="heart.glb" alt="Human heart"
+    camera-controls auto-rotate
+    ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed"
+    style="width:100%;height:100%">
+  </model-viewer>
+</body>
+</html>
