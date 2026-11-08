@@ -3,11 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AR Heart Test</title>
+  <title>AR Anatomy Viewer</title>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   <style>
-    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #f0f0f0; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #f0f0f0; font-family: sans-serif; }
     model-viewer { width: 100%; height: 100%; }
+    
+    /* Model selector dropdown styling */
+    #model-selector {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 10px 16px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      font-size: 15px;
+      font-weight: bold;
+      border: none;
+      outline: none;
+      z-index: 100;
+      cursor: pointer;
+    }
+
+    /* AR Button styling */
     #ar-button {
       background: #014BAA;
       color: white;
@@ -27,7 +47,15 @@
   </style>
 </head>
 <body>
- <model-viewer src="lungs.glb" alt="Human lungs"
+
+  <!-- Dropdown to switch between Heart and Lungs -->
+  <select id="model-selector" onchange="document.getElementById('viewer').src = this.value">
+    <option value="heart.glb">❤️ Human Heart</option>
+    <option value="lungs.glb">🫁 Human Lungs</option>
+  </select>
+
+  <!-- Model Viewer Element -->
+  <model-viewer id="viewer" src="heart.glb" alt="Anatomy Model"
     camera-controls auto-rotate
     ar ar-modes="webxr scene-viewer quick-look">
     
@@ -35,5 +63,6 @@
       View in your space 🚪
     </button>
   </model-viewer>
+
 </body>
 </html>
