@@ -44,6 +44,7 @@
       transition: background 0.3s ease;
     }
 
+    /* Edge-to-edge 3D viewer */
     model-viewer {
       position: fixed;
       inset: 0;
@@ -64,9 +65,9 @@
       transition: all 0.25s ease;
     }
 
-    /* Top Bar */
+    /* Top Bar (Now Absolute inside Model Viewer) */
     .top-bar {
-      position: fixed;
+      position: absolute;
       top: 18px;
       left: 0;
       width: 100%;
@@ -128,17 +129,15 @@
       cursor: pointer;
     }
 
-    /* Bottom UI Stack */
-    .bottom-ui {
-      position: fixed;
-      bottom: 20px;
+    /* Info Card Container */
+    .info-card-container {
+      position: absolute;
+      bottom: 85px; /* Sits just above the AR button */
       left: 0;
       width: 100%;
       padding: 0 16px;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
+      justify-content: center;
       z-index: 100;
       pointer-events: none;
     }
@@ -179,7 +178,12 @@
       backdrop-filter: blur(12px);
     }
 
+    /* AR Button positioned at the bottom */
     #ar-button {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       color: var(--text-main);
       padding: 13px 32px;
       border-radius: 35px;
@@ -188,47 +192,52 @@
       letter-spacing: 0.3px;
       white-space: nowrap;
       cursor: pointer;
+      z-index: 100;
     }
 
-    #theme-toggle:active, #audio-btn:active, #ar-button:active {
+    #theme-toggle:active, #audio-btn:active {
       transform: scale(0.95);
+    }
+    #ar-button:active {
+      transform: translateX(-50%) scale(0.95);
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Controls -->
-  <div class="top-bar">
-    <div class="selector-container glass">
-      <select id="model-selector" onchange="changeModel(this.value)">
-        <option value="heart.glb">❤️ Human Heart</option>
-        <option value="lungs.glb">🫁 Human Lungs</option>
-        <option value="solar.glb">🪐 Solar System</option>
-        <option value="dna.glb">🧬 DNA Helix</option>
-      </select>
-    </div>
-    <button id="theme-toggle" class="glass" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
-  </div>
-
-  <!-- 3D Viewer -->
+  <!-- ALL UI is now placed INSIDE the model-viewer tag -->
   <model-viewer id="viewer" src="heart.glb" alt="3D Model Viewer"
     camera-controls auto-rotate shadow-intensity="1" autoplay
     ar ar-modes="webxr scene-viewer quick-look">
-    <button slot="ar-button" style="display: none;"></button>
-  </model-viewer>
 
-  <!-- Bottom Info & AR Trigger -->
-  <div class="bottom-ui">
-    <div class="info-card glass">
-      <h2 id="info-title">Human Heart</h2>
-      <p id="info-desc">The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.</p>
-      <button id="audio-btn" onclick="playAudio()">🔊 Listen to facts</button>
+    <!-- Top Controls -->
+    <div class="top-bar">
+      <div class="selector-container glass">
+        <select id="model-selector" onchange="changeModel(this.value)">
+          <option value="heart.glb">❤️ Human Heart</option>
+          <option value="lungs.glb">🫁 Human Lungs</option>
+          <option value="solar.glb">🪐 Solar System</option>
+          <option value="dna.glb">🧬 DNA Helix</option>
+        </select>
+      </div>
+      <button id="theme-toggle" class="glass" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
     </div>
 
-    <button id="ar-button" class="glass" onclick="viewer.activateAR()">
+    <!-- Info Card -->
+    <div class="info-card-container">
+      <div class="info-card glass">
+        <h2 id="info-title">Human Heart</h2>
+        <p id="info-desc">The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.</p>
+        <button id="audio-btn" onclick="playAudio()">🔊 Listen to facts</button>
+      </div>
+    </div>
+
+    <!-- AR Button (Direct child with slot="ar-button" so it hides in AR mode automatically) -->
+    <button slot="ar-button" id="ar-button" class="glass">
       View in your space
     </button>
-  </div>
+
+  </model-viewer>
 
   <script>
     const viewer = document.getElementById('viewer');
