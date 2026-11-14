@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AR Educational Viewer</title>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   <style>
+    /* Theme Variables */
     :root {
       --bg-color: #f2f4f8;
       --glass-bg: rgba(255, 255, 255, 0.32);
@@ -30,6 +31,7 @@
       --option-bg: #1e293b;
     }
 
+    /* Base Layout */
     * { box-sizing: border-box; }
     html, body {
       margin: 0;
@@ -51,6 +53,18 @@
       z-index: 1;
     }
 
+    /* Reusable iOS Glass Style */
+    .glass {
+      pointer-events: auto;
+      background: var(--glass-bg);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--glass-shadow), var(--glass-inset);
+      transition: all 0.25s ease;
+    }
+
+    /* Top Bar */
     .top-bar {
       position: fixed;
       top: 18px;
@@ -65,18 +79,11 @@
     }
 
     .selector-container {
-      pointer-events: auto;
-      background: var(--glass-bg);
-      backdrop-filter: blur(28px) saturate(200%);
-      -webkit-backdrop-filter: blur(28px) saturate(200%);
       padding: 5px;
       border-radius: 35px;
-      box-shadow: var(--glass-shadow), var(--glass-inset);
-      border: 1px solid var(--glass-border);
       display: flex;
       align-items: center;
       position: relative;
-      transition: all 0.3s ease;
     }
 
     #model-selector {
@@ -92,6 +99,7 @@
       appearance: none;
       -webkit-appearance: none;
     }
+
     #model-selector option {
       background: var(--option-bg);
       color: var(--text-main);
@@ -107,27 +115,20 @@
     }
 
     #theme-toggle {
-      pointer-events: auto;
       position: absolute;
       right: 16px;
       width: 42px;
       height: 42px;
       border-radius: 50%;
-      background: var(--glass-bg);
-      backdrop-filter: blur(28px) saturate(200%);
-      -webkit-backdrop-filter: blur(28px) saturate(200%);
-      border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow), var(--glass-inset);
       color: var(--text-main);
       font-size: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-    #theme-toggle:active { transform: scale(0.92); }
 
+    /* Bottom UI Stack */
     .bottom-ui {
       position: fixed;
       bottom: 20px;
@@ -143,24 +144,19 @@
     }
 
     .info-card {
-      pointer-events: auto;
       width: 100%;
       max-width: 360px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(28px) saturate(200%);
-      -webkit-backdrop-filter: blur(28px) saturate(200%);
       padding: 14px 18px;
       border-radius: 24px;
-      box-shadow: var(--glass-shadow), var(--glass-inset);
-      border: 1px solid var(--glass-border);
-      transition: all 0.3s ease;
     }
+
     .info-card h2 {
       margin: 0 0 4px 0;
       font-size: 16px;
       font-weight: 700;
       color: var(--text-main);
     }
+
     .info-card p {
       margin: 0 0 10px 0;
       font-size: 13px;
@@ -182,16 +178,9 @@
       gap: 6px;
       backdrop-filter: blur(12px);
     }
-    #audio-btn:active { transform: scale(0.96); }
 
-    /* iOS Liquid Glass AR Button */
     #ar-button {
-      pointer-events: auto;
-      background: var(--glass-bg);
-      backdrop-filter: blur(28px) saturate(200%);
-      -webkit-backdrop-filter: blur(28px) saturate(200%);
       color: var(--text-main);
-      border: 1px solid var(--glass-border);
       padding: 13px 32px;
       border-radius: 35px;
       font-size: 15px;
@@ -199,16 +188,18 @@
       letter-spacing: 0.3px;
       white-space: nowrap;
       cursor: pointer;
-      box-shadow: var(--glass-shadow), var(--glass-inset);
-      transition: all 0.25s ease;
     }
-    #ar-button:active { transform: scale(0.95); }
+
+    #theme-toggle:active, #audio-btn:active, #ar-button:active {
+      transform: scale(0.95);
+    }
   </style>
 </head>
 <body>
 
+  <!-- Top Controls -->
   <div class="top-bar">
-    <div class="selector-container">
+    <div class="selector-container glass">
       <select id="model-selector" onchange="changeModel(this.value)">
         <option value="heart.glb">❤️ Human Heart</option>
         <option value="lungs.glb">🫁 Human Lungs</option>
@@ -216,77 +207,78 @@
         <option value="dna.glb">🧬 DNA Helix</option>
       </select>
     </div>
-    <button id="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
+    <button id="theme-toggle" class="glass" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
   </div>
 
+  <!-- 3D Viewer -->
   <model-viewer id="viewer" src="heart.glb" alt="3D Model Viewer"
     camera-controls auto-rotate shadow-intensity="1" autoplay
     ar ar-modes="webxr scene-viewer quick-look">
     <button slot="ar-button" style="display: none;"></button>
   </model-viewer>
 
+  <!-- Bottom Info & AR Trigger -->
   <div class="bottom-ui">
-    <div class="info-card">
+    <div class="info-card glass">
       <h2 id="info-title">Human Heart</h2>
       <p id="info-desc">The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.</p>
       <button id="audio-btn" onclick="playAudio()">🔊 Listen to facts</button>
     </div>
 
-    <button id="ar-button" onclick="document.getElementById('viewer').activateAR()">
+    <button id="ar-button" class="glass" onclick="viewer.activateAR()">
       View in your space
     </button>
   </div>
 
   <script>
+    const viewer = document.getElementById('viewer');
+    const infoTitle = document.getElementById('info-title');
+    const infoDesc = document.getElementById('info-desc');
+    const themeToggle = document.getElementById('theme-toggle');
+
     const modelData = {
-      'heart.glb': { 
-        title: 'Human Heart', 
-        desc: 'The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.' 
+      'heart.glb': {
+        title: 'Human Heart',
+        desc: 'The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.'
       },
-      'lungs.glb': { 
-        title: 'Human Lungs', 
-        desc: 'The lungs are the center of the respiratory system. They allow us to breathe in oxygen and exhale carbon dioxide.' 
+      'lungs.glb': {
+        title: 'Human Lungs',
+        desc: 'The lungs are the center of the respiratory system. They allow us to breathe in oxygen and exhale carbon dioxide.'
       },
-      'solar.glb': { 
-        title: 'Solar System', 
-        desc: 'Our solar system consists of the Sun and the celestial objects bound to it by gravity, including eight planets.' 
+      'solar.glb': {
+        title: 'Solar System',
+        desc: 'Our solar system consists of the Sun and the celestial objects bound to it by gravity, including eight planets.'
       },
-      'dna.glb': { 
-        title: 'DNA Double Helix', 
-        desc: 'Deoxyribonucleic acid (DNA) is a molecule that carries the genetic instructions used in growth and reproduction.' 
+      'dna.glb': {
+        title: 'DNA Double Helix',
+        desc: 'Deoxyribonucleic acid (DNA) is a molecule that carries the genetic instructions used in growth and reproduction.'
       }
     };
 
     function changeModel(modelFile) {
-      document.getElementById('viewer').src = modelFile;
-      document.getElementById('info-title').innerText = modelData[modelFile].title;
-      document.getElementById('info-desc').innerText = modelData[modelFile].desc;
+      viewer.src = modelFile;
+      infoTitle.innerText = modelData[modelFile].title;
+      infoDesc.innerText = modelData[modelFile].desc;
       window.speechSynthesis.cancel();
     }
 
     function toggleTheme() {
       const isDark = document.body.classList.toggle('dark');
-      document.getElementById('theme-toggle').innerText = isDark ? '☀️' : '🌙';
+      themeToggle.innerText = isDark ? '☀️' : '🌙';
     }
 
     function playAudio() {
       window.speechSynthesis.cancel();
-      const textToRead = document.getElementById('info-desc').innerText;
-      const utterance = new SpeechSynthesisUtterance(textToRead);
-      
+      const utterance = new SpeechSynthesisUtterance(infoDesc.innerText);
       const voices = window.speechSynthesis.getVoices();
-      const preferredVoice = voices.find(voice => voice.lang === 'en-GB' || voice.lang === 'en-IN') || voices[1];
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
-      }
-      
+      const preferredVoice = voices.find(v => v.lang === 'en-GB' || v.lang === 'en-IN') || voices[1];
+
+      if (preferredVoice) utterance.voice = preferredVoice;
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
     }
 
-    window.speechSynthesis.onvoiceschanged = function() {
-      window.speechSynthesis.getVoices();
-    };
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
   </script>
 </body>
 </html>
