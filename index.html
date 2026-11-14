@@ -216,8 +216,12 @@
         <select id="model-selector" onchange="changeModel(this.value)">
           <option value="heart.glb">❤️ Human Heart</option>
           <option value="lungs.glb">🫁 Human Lungs</option>
+          <option value="human_skeleton.glb">💀 Human Skeleton</option>
+          <option value="digestive_system.glb">🍽️ Digestive System</option>
+          <option value="ear_model.glb">👂 Human Ear</option>
+          <option value="anatomy_of_a_flower.glb">🌸 Anatomy of a Flower</option>
           <option value="solar.glb">🪐 Solar System</option>
-          <option value="dna.glb">🧬 DNA Helix</option>
+          <option value="dna.glb">🧬 DNA Double Helix</option>
         </select>
       </div>
       <button id="theme-toggle" class="glass" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
@@ -246,23 +250,39 @@
     const themeToggle = document.getElementById('theme-toggle');
 
     const modelData = {
-      'heart.glb': {
-        title: 'Human Heart',
-        desc: 'The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.'
-      },
-      'lungs.glb': {
-        title: 'Human Lungs',
-        desc: 'The lungs are the center of the respiratory system. They allow us to breathe in oxygen and exhale carbon dioxide.'
-      },
-      'solar.glb': {
-        title: 'Solar System',
-        desc: 'Our solar system consists of the Sun and the celestial objects bound to it by gravity, including eight planets.'
-      },
-      'dna.glb': {
-        title: 'DNA Double Helix',
-        desc: 'Deoxyribonucleic acid (DNA) is a molecule that carries the genetic instructions used in growth and reproduction.'
-      }
-    };
+  'heart.glb': {
+    title: 'Human Heart',
+    desc: 'The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.'
+  },
+  'lungs.glb': {
+    title: 'Human Lungs',
+    desc: 'The lungs are the center of the respiratory system. They allow us to breathe in oxygen and exhale carbon dioxide.'
+  },
+  'human_skeleton.glb': {
+    title: 'Human Skeleton',
+    desc: 'The human skeleton provides structural support, protects internal organs, and works with muscles to enable body movement.'
+  },
+  'digestive_system.glb': {
+    title: 'Digestive System',
+    desc: 'The digestive system breaks down food into nutrients, which the body uses for energy, growth, and cell repair.'
+  },
+  'ear_model.glb': {
+    title: 'Human Ear',
+    desc: 'The ear is responsible for hearing and maintaining balance by converting sound waves into nerve signals for the brain.'
+  },
+  'anatomy_of_a_flower.glb': {
+    title: 'Anatomy of a Flower',
+    desc: 'Flowers contain reproductive organs enclosed by petals, facilitating pollination and seed production in plants.'
+  },
+  'solar.glb': {
+    title: 'Solar System',
+    desc: 'Our solar system consists of the Sun and the celestial objects bound to it by gravity, including eight planets.'
+  },
+  'dna.glb': {
+    title: 'DNA Double Helix',
+    desc: 'Deoxyribonucleic acid (DNA) is a molecule that carries the genetic instructions used in growth and reproduction.'
+  }
+};
 
     function changeModel(modelFile) {
       viewer.src = modelFile;
