@@ -8,7 +8,7 @@
   <style>
     /* Updated background color */
     html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #f0f0f0; font-family: system-ui, -apple-system, sans-serif; }
-    model-viewer { width: 100%; height: 100%; }
+    model-viewer { width: 100%; height: 100%; padding-bottom: 220px; box-sizing: border-box; }
     
     /* Top Dropdown */
     .selector-container {
@@ -72,7 +72,7 @@
   <model-viewer id="viewer" src="heart.glb" alt="3D Model Viewer"
     camera-controls auto-rotate shadow-intensity="1" autoplay
     ar ar-modes="webxr scene-viewer quick-look">
-    <button id="ar-button" slot="ar-button">View in your space 🚪</button>
+    <button id="ar-button" slot="ar-button">View in your space</button>
   </model-viewer>
 
   <script>
@@ -105,13 +105,30 @@
     }
 
     // Web Speech API Text-to-Speech Engine
-    function playAudio() {
-      window.speechSynthesis.cancel(); // Reset
-      const textToRead = document.getElementById('info-desc').innerText;
-      const utterance = new SpeechSynthesisUtterance(textToRead);
-      utterance.rate = 0.9; // Slightly slower for clear dictation
-      window.speechSynthesis.speak(utterance);
-    }
+    // Text-to-Speech Engine with Voice Selection
+function playAudio() {
+  window.speechSynthesis.cancel(); // Reset
+  const textToRead = document.getElementById('info-desc').innerText;
+  const utterance = new SpeechSynthesisUtterance(textToRead);
+  
+  // Load available system voices
+  const voices = window.speechSynthesis.getVoices();
+  
+  // Try to find a British English voice, or default to the second available voice
+  const preferredVoice = voices.find(voice => voice.lang === 'en-GB') || voices[1];
+  
+  if (preferredVoice) {
+    utterance.voice = preferredVoice;
+  }
+  
+  utterance.rate = 0.9; // Read slightly slower for students
+  window.speechSynthesis.speak(utterance);
+}
+
+// Trick to force browsers to load voices immediately on page load
+window.speechSynthesis.onvoiceschanged = function() {
+  window.speechSynthesis.getVoices();
+};
   </script>
 </body>
 </html>
