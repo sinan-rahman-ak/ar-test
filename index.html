@@ -44,7 +44,6 @@
       transition: background 0.3s ease;
     }
 
-    /* Edge-to-edge 3D viewer */
     model-viewer {
       position: fixed;
       inset: 0;
@@ -54,7 +53,6 @@
       z-index: 1;
     }
 
-    /* Reusable iOS Glass Style */
     .glass {
       pointer-events: auto;
       background: var(--glass-bg);
@@ -129,7 +127,7 @@
       cursor: pointer;
     }
 
-    /* Hotspot Button Styling */
+    /* Hotspot Button Styling (Hidden by default using display: none) */
     .hotspot-btn {
       padding: 6px 12px;
       border-radius: 20px;
@@ -138,6 +136,7 @@
       color: var(--text-main);
       cursor: pointer;
       white-space: nowrap;
+      display: none; 
     }
     .hotspot-btn:hover {
       transform: scale(1.05);
@@ -240,8 +239,8 @@
       <button id="theme-toggle" class="glass" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
     </div>
 
-    <!-- Test Hotspot (Pins to the center of the 3D space) -->
-    <button slot="hotspot-flower" class="hotspot-btn glass" data-position="0m 0.05m 0m" data-normal="0m 1m 0m">
+    <!-- Flower Hotspot (Controlled via JS) -->
+    <button slot="hotspot-flower" id="flower-hotspot" class="hotspot-btn glass" data-position="0m 0.05m 0m" data-normal="0m 1m 0m">
       🌸 Center / Stamen
     </button>
 
@@ -266,6 +265,7 @@
     const infoTitle = document.getElementById('info-title');
     const infoDesc = document.getElementById('info-desc');
     const themeToggle = document.getElementById('theme-toggle');
+    const flowerHotspot = document.getElementById('flower-hotspot');
 
     const modelData = {
       'heart.glb': {
@@ -307,6 +307,13 @@
       infoTitle.innerText = modelData[modelFile].title;
       infoDesc.innerText = modelData[modelFile].desc;
       window.speechSynthesis.cancel();
+
+      // Show hotspot ONLY if the flower model is selected, hide for all others
+      if (modelFile === 'anatomy_of_a_flower.glb') {
+        flowerHotspot.style.display = 'block';
+      } else {
+        flowerHotspot.style.display = 'none';
+      }
     }
 
     function toggleTheme() {
