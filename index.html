@@ -9,19 +9,21 @@
     :root {
       --bg-color: #f2f4f8;
       --glass-bg: rgba(255, 255, 255, 0.32);
-      --glass-border: rgba(255, 255, 255, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.7);
       --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      --glass-inset: inset 0 1px 1px rgba(255, 255, 255, 0.7);
       --text-main: #0f172a;
       --text-sub: #334155;
-      --btn-sub-bg: rgba(255, 255, 255, 0.55);
+      --btn-sub-bg: rgba(255, 255, 255, 0.5);
       --option-bg: #ffffff;
     }
 
     body.dark {
       --bg-color: #0b1120;
-      --glass-bg: rgba(15, 23, 42, 0.38);
-      --glass-border: rgba(255, 255, 255, 0.16);
+      --glass-bg: rgba(15, 23, 42, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.18);
       --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+      --glass-inset: inset 0 1px 1px rgba(255, 255, 255, 0.15);
       --text-main: #f8fafc;
       --text-sub: #cbd5e1;
       --btn-sub-bg: rgba(255, 255, 255, 0.12);
@@ -40,18 +42,15 @@
       transition: background 0.3s ease;
     }
 
-    /* Full-screen 3D viewer for unrestricted rotation and zoom */
     model-viewer {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
-      padding-bottom: 140px;
       outline: none;
       z-index: 1;
     }
 
-    /* Top Bar (Dropdown + Theme Toggle) */
     .top-bar {
       position: fixed;
       top: 18px;
@@ -68,11 +67,11 @@
     .selector-container {
       pointer-events: auto;
       background: var(--glass-bg);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
       padding: 5px;
       border-radius: 35px;
-      box-shadow: var(--glass-shadow);
+      box-shadow: var(--glass-shadow), var(--glass-inset);
       border: 1px solid var(--glass-border);
       display: flex;
       align-items: center;
@@ -107,7 +106,6 @@
       pointer-events: none;
     }
 
-    /* Top-Right Theme Button */
     #theme-toggle {
       pointer-events: auto;
       position: absolute;
@@ -116,10 +114,10 @@
       height: 42px;
       border-radius: 50%;
       background: var(--glass-bg);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
       border: 1px solid var(--glass-border);
-      box-shadow: var(--glass-shadow);
+      box-shadow: var(--glass-shadow), var(--glass-inset);
       color: var(--text-main);
       font-size: 18px;
       display: flex;
@@ -130,7 +128,6 @@
     }
     #theme-toggle:active { transform: scale(0.92); }
 
-    /* Bottom Translucent iOS Glass Stack */
     .bottom-ui {
       position: fixed;
       bottom: 20px;
@@ -154,7 +151,7 @@
       -webkit-backdrop-filter: blur(28px) saturate(200%);
       padding: 14px 18px;
       border-radius: 24px;
-      box-shadow: var(--glass-shadow);
+      box-shadow: var(--glass-shadow), var(--glass-inset);
       border: 1px solid var(--glass-border);
       transition: all 0.3s ease;
     }
@@ -187,28 +184,29 @@
     }
     #audio-btn:active { transform: scale(0.96); }
 
-    /* Clean AR Button */
+    /* iOS Liquid Glass AR Button */
     #ar-button {
       pointer-events: auto;
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      padding: 13px 30px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(28px) saturate(200%);
+      -webkit-backdrop-filter: blur(28px) saturate(200%);
+      color: var(--text-main);
+      border: 1px solid var(--glass-border);
+      padding: 13px 32px;
       border-radius: 35px;
       font-size: 15px;
       font-weight: 600;
       letter-spacing: 0.3px;
       white-space: nowrap;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
-      transition: transform 0.2s ease;
+      box-shadow: var(--glass-shadow), var(--glass-inset);
+      transition: all 0.25s ease;
     }
-    #ar-button:active { transform: scale(0.96); }
+    #ar-button:active { transform: scale(0.95); }
   </style>
 </head>
 <body>
 
-  <!-- Top Bar: Dropdown + Light/Dark Button -->
   <div class="top-bar">
     <div class="selector-container">
       <select id="model-selector" onchange="changeModel(this.value)">
@@ -221,14 +219,12 @@
     <button id="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
   </div>
 
-  <!-- Full-Screen 3D Viewer -->
   <model-viewer id="viewer" src="heart.glb" alt="3D Model Viewer"
     camera-controls auto-rotate shadow-intensity="1" autoplay
     ar ar-modes="webxr scene-viewer quick-look">
     <button slot="ar-button" style="display: none;"></button>
   </model-viewer>
 
-  <!-- Bottom Translucent UI -->
   <div class="bottom-ui">
     <div class="info-card">
       <h2 id="info-title">Human Heart</h2>
