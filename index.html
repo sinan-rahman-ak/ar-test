@@ -65,7 +65,7 @@
       transition: all 0.25s ease;
     }
 
-    /* Top Bar (Now Absolute inside Model Viewer) */
+    /* Top Bar */
     .top-bar {
       position: absolute;
       top: 18px;
@@ -129,10 +129,24 @@
       cursor: pointer;
     }
 
+    /* Hotspot Button Styling */
+    .hotspot-btn {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .hotspot-btn:hover {
+      transform: scale(1.05);
+    }
+
     /* Info Card Container */
     .info-card-container {
       position: absolute;
-      bottom: 85px; /* Sits just above the AR button */
+      bottom: 85px;
       left: 0;
       width: 100%;
       padding: 0 16px;
@@ -178,7 +192,7 @@
       backdrop-filter: blur(12px);
     }
 
-    /* AR Button positioned at the bottom */
+    /* AR Button */
     #ar-button {
       position: absolute;
       bottom: 20px;
@@ -205,7 +219,6 @@
 </head>
 <body>
 
-  <!-- ALL UI is now placed INSIDE the model-viewer tag -->
   <model-viewer id="viewer" src="heart.glb" alt="3D Model Viewer"
     camera-controls auto-rotate shadow-intensity="1" autoplay
     ar ar-modes="webxr scene-viewer quick-look">
@@ -227,6 +240,11 @@
       <button id="theme-toggle" class="glass" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
     </div>
 
+    <!-- Test Hotspot (Pins to the center of the 3D space) -->
+    <button slot="hotspot-flower" class="hotspot-btn glass" data-position="0m 0.05m 0m" data-normal="0m 1m 0m">
+      🌸 Center / Stamen
+    </button>
+
     <!-- Info Card -->
     <div class="info-card-container">
       <div class="info-card glass">
@@ -236,7 +254,7 @@
       </div>
     </div>
 
-    <!-- AR Button (Direct child with slot="ar-button" so it hides in AR mode automatically) -->
+    <!-- AR Button -->
     <button slot="ar-button" id="ar-button" class="glass">
       View in your space
     </button>
@@ -250,39 +268,39 @@
     const themeToggle = document.getElementById('theme-toggle');
 
     const modelData = {
-  'heart.glb': {
-    title: 'Human Heart',
-    desc: 'The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.'
-  },
-  'lungs.glb': {
-    title: 'Human Lungs',
-    desc: 'The lungs are the center of the respiratory system. They allow us to breathe in oxygen and exhale carbon dioxide.'
-  },
-  'human_skeleton.glb': {
-    title: 'Human Skeleton',
-    desc: 'The human skeleton provides structural support, protects internal organs, and works with muscles to enable body movement.'
-  },
-  'digestive_system.glb': {
-    title: 'Digestive System',
-    desc: 'The digestive system breaks down food into nutrients, which the body uses for energy, growth, and cell repair.'
-  },
-  'ear_model.glb': {
-    title: 'Human Ear',
-    desc: 'The ear is responsible for hearing and maintaining balance by converting sound waves into nerve signals for the brain.'
-  },
-  'anatomy_of_a_flower.glb': {
-    title: 'Anatomy of a Flower',
-    desc: 'Flowers contain reproductive organs enclosed by petals, facilitating pollination and seed production in plants.'
-  },
-  'solar.glb': {
-    title: 'Solar System',
-    desc: 'Our solar system consists of the Sun and the celestial objects bound to it by gravity, including eight planets.'
-  },
-  'dna.glb': {
-    title: 'DNA Double Helix',
-    desc: 'Deoxyribonucleic acid (DNA) is a molecule that carries the genetic instructions used in growth and reproduction.'
-  }
-};
+      'heart.glb': {
+        title: 'Human Heart',
+        desc: 'The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.'
+      },
+      'lungs.glb': {
+        title: 'Human Lungs',
+        desc: 'The lungs are the center of the respiratory system. They allow us to breathe in oxygen and exhale carbon dioxide.'
+      },
+      'human_skeleton.glb': {
+        title: 'Human Skeleton',
+        desc: 'The human skeleton provides structural support, protects internal organs, and works with muscles to enable body movement.'
+      },
+      'digestive_system.glb': {
+        title: 'Digestive System',
+        desc: 'The digestive system breaks down food into nutrients, which the body uses for energy, growth, and cell repair.'
+      },
+      'ear_model.glb': {
+        title: 'Human Ear',
+        desc: 'The ear is responsible for hearing and maintaining balance by converting sound waves into nerve signals for the brain.'
+      },
+      'anatomy_of_a_flower.glb': {
+        title: 'Anatomy of a Flower',
+        desc: 'Flowers contain reproductive organs enclosed by petals, facilitating pollination and seed production in plants.'
+      },
+      'solar.glb': {
+        title: 'Solar System',
+        desc: 'Our solar system consists of the Sun and the celestial objects bound to it by gravity, including eight planets.'
+      },
+      'dna.glb': {
+        title: 'DNA Double Helix',
+        desc: 'Deoxyribonucleic acid (DNA) is a molecule that carries the genetic instructions used in growth and reproduction.'
+      }
+    };
 
     function changeModel(modelFile) {
       viewer.src = modelFile;
