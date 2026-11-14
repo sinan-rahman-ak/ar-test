@@ -6,53 +6,139 @@
   <title>AR Educational Viewer</title>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
   <style>
-    /* Updated background color */
-    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #f0f0f0; font-family: system-ui, -apple-system, sans-serif; }
-    model-viewer { width: 100%; height: 100%; padding-bottom: 220px; box-sizing: border-box; }
-    
-    /* Top Dropdown */
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      background: #f0f0f0;
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* 1. Top Dropdown Zone */
     .selector-container {
-      position: absolute; top: 24px; left: 50%; transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      padding: 6px; border-radius: 35px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.4); z-index: 100; display: flex; align-items: center;
+      margin-top: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 6px;
+      border-radius: 35px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      position: relative;
+      flex-shrink: 0;
     }
     #model-selector {
-      background: transparent; padding: 10px 36px 10px 18px; border-radius: 30px; font-size: 15px;
-      font-weight: 600; color: #1e293b; border: none; outline: none; cursor: pointer; appearance: none;
+      background: transparent;
+      padding: 8px 36px 8px 18px;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1e293b;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
     }
-    .selector-container::after { content: '▼'; font-size: 10px; color: #64748b; position: absolute; right: 18px; pointer-events: none; }
+    .selector-container::after {
+      content: '▼';
+      font-size: 10px;
+      color: #64748b;
+      position: absolute;
+      right: 16px;
+      pointer-events: none;
+    }
 
-    /* New Floating Info Card */
-    .info-card {
-      position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
-      width: 90%; max-width: 350px; background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      padding: 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.5); z-index: 100;
+    /* 2. Middle 3D Model Zone (Strictly between Top and Bottom) */
+    model-viewer {
+      width: 100%;
+      flex: 1;
+      min-height: 0;
+      outline: none;
     }
-    .info-card h2 { margin: 0 0 8px 0; font-size: 18px; color: #0f172a; }
-    .info-card p { margin: 0 0 15px 0; font-size: 14px; color: #475569; line-height: 1.5; }
-    
-    /* Audio Button */
+
+    /* 3. Bottom UI Zone (Info Card + AR Button stacked cleanly) */
+    .bottom-ui {
+      width: 100%;
+      padding: 0 16px 20px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    .info-card {
+      width: 100%;
+      max-width: 360px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 16px 18px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    .info-card h2 {
+      margin: 0 0 6px 0;
+      font-size: 17px;
+      color: #0f172a;
+    }
+    .info-card p {
+      margin: 0 0 12px 0;
+      font-size: 13.5px;
+      color: #475569;
+      line-height: 1.45;
+    }
+
     #audio-btn {
-      background: #e2e8f0; color: #1e293b; border: none; padding: 8px 16px;
-      border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; gap: 6px;
+      background: #e2e8f0;
+      color: #1e293b;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
     #audio-btn:active { background: #cbd5e1; }
 
     /* AR Button */
     #ar-button {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none;
-      padding: 14px 30px; position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%);
-      border-radius: 35px; font-size: 16px; font-weight: 700; cursor: pointer;
-      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); z-index: 100;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border: none;
+      padding: 13px 28px;
+      border-radius: 35px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      white-space: nowrap;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+    }
+    #ar-button:active {
+      transform: scale(0.97);
     }
   </style>
 </head>
 <body>
 
+  <!-- 1. Top Dropdown -->
   <div class="selector-container">
     <select id="model-selector" onchange="changeModel(this.value)">
       <option value="heart.glb">❤️ Human Heart</option>
@@ -62,21 +148,29 @@
     </select>
   </div>
 
-  <!-- New Info Card -->
-  <div class="info-card">
-    <h2 id="info-title">Human Heart</h2>
-    <p id="info-desc">The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.</p>
-    <button id="audio-btn" onclick="playAudio()">🔊 Listen to facts</button>
-  </div>
-
+  <!-- 2. Middle 3D Model Viewer -->
   <model-viewer id="viewer" src="heart.glb" alt="3D Model Viewer"
     camera-controls auto-rotate shadow-intensity="1" autoplay
+    camera-orbit="0deg 75deg 130%" field-of-view="45deg"
     ar ar-modes="webxr scene-viewer quick-look">
-    <button id="ar-button" slot="ar-button">View in your space</button>
+    <!-- Hidden slot hides default small AR cube icon -->
+    <button slot="ar-button" style="display: none;"></button>
   </model-viewer>
 
+  <!-- 3. Bottom Stacked UI -->
+  <div class="bottom-ui">
+    <div class="info-card">
+      <h2 id="info-title">Human Heart</h2>
+      <p id="info-desc">The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.</p>
+      <button id="audio-btn" onclick="playAudio()">🔊 Listen to facts</button>
+    </div>
+
+    <button id="ar-button" onclick="document.getElementById('viewer').activateAR()">
+      View in your space
+    </button>
+  </div>
+
   <script>
-    // Data dictionary for the info card
     const modelData = {
       'heart.glb': { 
         title: 'Human Heart', 
@@ -96,39 +190,31 @@
       }
     };
 
-    // Update 3D viewer and info card when dropdown changes
     function changeModel(modelFile) {
       document.getElementById('viewer').src = modelFile;
       document.getElementById('info-title').innerText = modelData[modelFile].title;
       document.getElementById('info-desc').innerText = modelData[modelFile].desc;
-      window.speechSynthesis.cancel(); // Stop audio if playing
+      window.speechSynthesis.cancel();
     }
 
-    // Web Speech API Text-to-Speech Engine
-    // Text-to-Speech Engine with Voice Selection
-function playAudio() {
-  window.speechSynthesis.cancel(); // Reset
-  const textToRead = document.getElementById('info-desc').innerText;
-  const utterance = new SpeechSynthesisUtterance(textToRead);
-  
-  // Load available system voices
-  const voices = window.speechSynthesis.getVoices();
-  
-  // Try to find a British English voice, or default to the second available voice
-  const preferredVoice = voices.find(voice => voice.lang === 'en-GB') || voices[1];
-  
-  if (preferredVoice) {
-    utterance.voice = preferredVoice;
-  }
-  
-  utterance.rate = 0.9; // Read slightly slower for students
-  window.speechSynthesis.speak(utterance);
-}
+    function playAudio() {
+      window.speechSynthesis.cancel();
+      const textToRead = document.getElementById('info-desc').innerText;
+      const utterance = new SpeechSynthesisUtterance(textToRead);
+      
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(voice => voice.lang === 'en-GB' || voice.lang === 'en-IN') || voices[1];
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+      
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
 
-// Trick to force browsers to load voices immediately on page load
-window.speechSynthesis.onvoiceschanged = function() {
-  window.speechSynthesis.getVoices();
-};
+    window.speechSynthesis.onvoiceschanged = function() {
+      window.speechSynthesis.getVoices();
+    };
   </script>
 </body>
 </html>
