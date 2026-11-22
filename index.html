@@ -498,8 +498,16 @@
       if (hit) {
         const pos = `${hit.position.x.toFixed(3)}m ${hit.position.y.toFixed(3)}m ${hit.position.z.toFixed(3)}m`;
         const norm = `${hit.normal.x.toFixed(3)}m ${hit.normal.y.toFixed(3)}m ${hit.normal.z.toFixed(3)}m`;
+        const slotName = selectedPinForEdit.getAttribute('slot');
+
         selectedPinForEdit.setAttribute('data-position', pos);
         selectedPinForEdit.setAttribute('data-normal', norm);
+        viewer.updateHotspot({
+          name: slotName,
+          position: pos,
+          normal: norm
+        });
+
         infoDesc.innerText = `Pin ${selectedPinForEdit.innerText} moved! Tap the next number or tap Copy Pin Code.`;
       }
     });
