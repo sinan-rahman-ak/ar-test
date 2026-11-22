@@ -124,12 +124,45 @@
       cursor: pointer;
     }
 
+    /* Pin Editor Controls (Shown only for Flower) */
+    .editor-bar {
+      position: absolute;
+      top: 72px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      gap: 8px;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .editor-bar.visible {
+      display: flex;
+    }
+
+    .editor-btn {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .editor-btn.active {
+      background: #0284c7;
+      color: #ffffff;
+      border-color: #ffffff;
+    }
+
+    /* Numbered Circular Hotspot Pins */
     .hotspot-pin {
       display: none;
       width: 26px;
       height: 26px;
       border-radius: 50%;
-      background: rgba(15, 23, 42, 0.78);
+      background: rgba(15, 23, 42, 0.8);
       color: #ffffff;
       border: 2px solid rgba(255, 255, 255, 0.9);
       font-size: 12px;
@@ -151,6 +184,12 @@
       transform: scale(1.22);
       background: #0284c7;
       border-color: #ffffff;
+    }
+
+    .hotspot-pin.editing-selected {
+      background: #f59e0b;
+      border-color: #ffffff;
+      transform: scale(1.25);
     }
 
     .info-card-container {
@@ -186,7 +225,13 @@
       line-height: 1.4;
     }
 
-    #audio-btn {
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sub-btn {
       background: var(--btn-sub-bg);
       color: var(--text-main);
       border: 1px solid var(--glass-border);
@@ -217,7 +262,7 @@
       z-index: 100;
     }
 
-    #theme-toggle:active, #audio-btn:active {
+    #theme-toggle:active, .sub-btn:active, .editor-btn:active {
       transform: scale(0.95);
     }
     #ar-button:active {
@@ -231,6 +276,7 @@
     camera-controls auto-rotate shadow-intensity="1" autoplay
     ar ar-modes="webxr scene-viewer quick-look">
 
+    <!-- Top Controls -->
     <div class="top-bar">
       <div class="selector-container glass">
         <select id="model-selector" onchange="changeModel(this.value)">
@@ -247,58 +293,70 @@
       <button id="theme-toggle" class="glass" onclick="toggleTheme()" title="Toggle Theme">🌙</button>
     </div>
 
+    <!-- Visual Pin Alignment Bar (Only visible on Flower model) -->
+    <div id="editor-bar" class="editor-bar">
+      <button id="edit-pins-btn" class="editor-btn glass" onclick="toggleEditMode()">📍 Edit Pins</button>
+      <button id="copy-pins-btn" class="editor-btn glass" style="display:none;" onclick="copyPinPositions()">📋 Copy Pin Code</button>
+    </div>
+
+    <!-- Flower Numbered Hotspots (1-11) -->
     <button slot="hotspot-1" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
       data-position="-0.22m 0.22m 0.08m" data-normal="0m 0.5m 0.8m" data-zoom="0.55m"
-      onclick="selectHotspot(this, '1. Petal', 'Brightly colored modified leaves that attract pollinators such as bees, butterflies, and birds.')">1</button>
+      onclick="selectHotspot(this, '1. Petal', 'The parts of a flower that are often conspicuously colored.')">1</button>
 
     <button slot="hotspot-2" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
-      data-position="0m 0.38m 0m" data-normal="0m 1m 0m" data-zoom="0.45m"
-      onclick="selectHotspot(this, '2. Stigma', 'The sticky tip at the top of the pistil that captures and holds pollen grains.')">2</button>
+      data-position="0m 0.38m 0m" data-normal="0m 1m 0m" data-zoom="0.4m"
+      onclick="selectHotspot(this, '2. Stigma', 'The part of the pistil where pollen germinates.')">2</button>
 
     <button slot="hotspot-3" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
       data-position="-0.02m 0.16m 0.03m" data-normal="0m 0m 1m" data-zoom="0.45m"
-      onclick="selectHotspot(this, '3. Style', 'The slender stalk that connects the stigma to the ovary and guides pollen tubes downward.')">3</button>
+      onclick="selectHotspot(this, '3. Style', 'The slender stalk of the pistil connecting the stigma to the ovary.')">3</button>
 
     <button slot="hotspot-4" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
       data-position="0.03m -0.02m 0.04m" data-normal="0m 0m 1m" data-zoom="0.4m"
-      onclick="selectHotspot(this, '4. Ovary', 'The enlarged basal portion of the pistil where ovules are produced and later develop into fruit.')">4</button>
+      onclick="selectHotspot(this, '4. Ovary', 'The enlarged basal portion of the pistil where ovules are produced.')">4</button>
 
     <button slot="hotspot-5" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
       data-position="-0.02m -0.02m 0.04m" data-normal="0m 0m 1m" data-zoom="0.4m"
-      onclick="selectHotspot(this, '5. Ovule', 'Structures inside the ovary that contain female reproductive cells and become seeds after fertilization.')">5</button>
+      onclick="selectHotspot(this, '5. Ovule', 'The ovule is the organ that forms the seeds of flowering plants.')">5</button>
 
     <button slot="hotspot-6" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
       data-position="-0.12m -0.06m 0.06m" data-normal="0m 0.5m 0.8m" data-zoom="0.45m"
-      onclick="selectHotspot(this, '6. Sepal', 'Green leaf-like structures at the base that protect the developing flower bud before it opens.')">6</button>
+      onclick="selectHotspot(this, '6. Sepal', 'The outer parts of the flower (often green and leaf-like) that enclose a developing bud.')">6</button>
 
     <button slot="hotspot-7" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
       data-position="-0.14m 0.28m 0.05m" data-normal="0m 0.5m 0.8m" data-zoom="0.45m"
-      onclick="selectHotspot(this, '7. Anther', 'The pollen-producing sac at the top of the stamen where male reproductive cells are formed.')">7</button>
+      onclick="selectHotspot(this, '7. Stamen', 'The pollen producing part of a flower, usually with a slender filament supporting the anther.')">7</button>
 
     <button slot="hotspot-8" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
-      data-position="0.08m 0.26m 0.06m" data-normal="0m 0.5m 0.8m" data-zoom="0.5m"
-      onclick="selectHotspot(this, '8. Stamen', 'The male reproductive organ of the flower, made up of the anther and filament.')">8</button>
+      data-position="0.08m 0.26m 0.06m" data-normal="0m 0.5m 0.8m" data-zoom="0.45m"
+      onclick="selectHotspot(this, '8. Anther', 'The part of the stamen where pollen is produced.')">8</button>
 
     <button slot="hotspot-9" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
       data-position="0.07m 0.14m 0.04m" data-normal="0m 0m 1m" data-zoom="0.45m"
-      onclick="selectHotspot(this, '9. Filament', 'The thin stalk that supports the anther and holds it up to disperse pollen.')">9</button>
+      onclick="selectHotspot(this, '9. Filament', 'Part of the stamen.')">9</button>
 
     <button slot="hotspot-10" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
       data-position="0m -0.11m 0.04m" data-normal="0m 0m 1m" data-zoom="0.45m"
-      onclick="selectHotspot(this, '10. Receptacle', 'The thickened top of the flower stalk where all floral organs are attached.')">10</button>
+      onclick="selectHotspot(this, '10. Receptacle', 'The part of a flower stalk where the parts of the flower are attached.')">10</button>
 
     <button slot="hotspot-11" class="hotspot-pin" data-model="anatomy_of_a_flower.glb"
       data-position="0m -0.20m 0.02m" data-normal="0m 0m 1m" data-zoom="0.45m"
-      onclick="selectHotspot(this, '11. Pedicel (Stem)', 'The main stalk that supports the flower and transports water and nutrients.')">11</button>
+      onclick="selectHotspot(this, '11. Peduncle', 'The stalk of a flower.')">11</button>
 
+    <!-- Info Card -->
     <div class="info-card-container">
       <div class="info-card glass">
         <h2 id="info-title">Human Heart</h2>
         <p id="info-desc">The human heart is a muscular organ that pumps blood through the cardiovascular system, delivering oxygen to the body.</p>
-        <button id="audio-btn" onclick="playAudio()">🔊 Listen to facts</button>
+        <div class="card-actions">
+          <button id="audio-btn" class="sub-btn" onclick="playAudio()">🔊 Listen to facts</button>
+          <button id="reset-view-btn" class="sub-btn" style="display:none;" onclick="resetFlowerOverview()">↺ Full View</button>
+        </div>
       </div>
     </div>
 
+    <!-- AR Button -->
     <button slot="ar-button" id="ar-button" class="glass">
       View in your space
     </button>
@@ -311,6 +369,13 @@
     const infoDesc = document.getElementById('info-desc');
     const themeToggle = document.getElementById('theme-toggle');
     const allHotspots = document.querySelectorAll('.hotspot-pin');
+    const editorBar = document.getElementById('editor-bar');
+    const editPinsBtn = document.getElementById('edit-pins-btn');
+    const copyPinsBtn = document.getElementById('copy-pins-btn');
+    const resetViewBtn = document.getElementById('reset-view-btn');
+
+    let isEditMode = false;
+    let selectedPinForEdit = null;
 
     const modelData = {
       'heart.glb': {
@@ -352,15 +417,29 @@
       viewer.cameraOrbit = 'auto';
     }
 
+    function resetFlowerOverview() {
+      allHotspots.forEach(pin => pin.classList.remove('active'));
+      infoTitle.innerText = modelData['anatomy_of_a_flower.glb'].title;
+      infoDesc.innerText = modelData['anatomy_of_a_flower.glb'].desc;
+      resetViewBtn.style.display = 'none';
+      resetCamera();
+    }
+
     function changeModel(modelFile) {
       viewer.src = modelFile;
       infoTitle.innerText = modelData[modelFile].title;
       infoDesc.innerText = modelData[modelFile].desc;
       window.speechSynthesis.cancel();
       resetCamera();
+      resetViewBtn.style.display = 'none';
+
+      if (isEditMode) toggleEditMode();
+
+      const isFlower = modelFile === 'anatomy_of_a_flower.glb';
+      editorBar.classList.toggle('visible', isFlower);
 
       allHotspots.forEach(pin => {
-        pin.classList.remove('active');
+        pin.classList.remove('active', 'editing-selected');
         if (pin.dataset.model === modelFile) {
           pin.classList.add('visible');
         } else {
@@ -370,10 +449,20 @@
     }
 
     function selectHotspot(btn, partTitle, partDesc) {
+      if (isEditMode) {
+        allHotspots.forEach(pin => pin.classList.remove('editing-selected'));
+        selectedPinForEdit = btn;
+        btn.classList.add('editing-selected');
+        infoTitle.innerText = `Moving Pin ${partTitle}`;
+        infoDesc.innerText = 'Now tap directly on the exact part of the flower where this number belongs.';
+        return;
+      }
+
       allHotspots.forEach(pin => pin.classList.remove('active'));
       btn.classList.add('active');
       infoTitle.innerText = partTitle;
       infoDesc.innerText = partDesc;
+      resetViewBtn.style.display = 'inline-flex';
       window.speechSynthesis.cancel();
 
       const targetPos = btn.dataset.position;
@@ -382,6 +471,46 @@
         viewer.cameraTarget = targetPos;
         viewer.cameraOrbit = `0deg 75deg ${zoomDistance}`;
       }
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      editPinsBtn.classList.toggle('active', isEditMode);
+      editPinsBtn.innerText = isEditMode ? '✅ Done Editing' : '📍 Edit Pins';
+      copyPinsBtn.style.display = isEditMode ? 'inline-block' : 'none';
+      allHotspots.forEach(pin => pin.classList.remove('active', 'editing-selected'));
+      selectedPinForEdit = null;
+
+      if (isEditMode) {
+        viewer.autoRotate = false;
+        resetCamera();
+        infoTitle.innerText = 'Pin Alignment Mode';
+        infoDesc.innerText = '1. Tap a number (1–11). 2. Tap the matching flower part to move it there.';
+      } else {
+        viewer.autoRotate = true;
+        resetFlowerOverview();
+      }
+    }
+
+    viewer.addEventListener('click', (event) => {
+      if (!isEditMode || !selectedPinForEdit) return;
+      const hit = viewer.positionAndNormalFromPoint(event.clientX, event.clientY);
+      if (hit) {
+        const pos = `${hit.position.x.toFixed(3)}m ${hit.position.y.toFixed(3)}m ${hit.position.z.toFixed(3)}m`;
+        const norm = `${hit.normal.x.toFixed(3)}m ${hit.normal.y.toFixed(3)}m ${hit.normal.z.toFixed(3)}m`;
+        selectedPinForEdit.setAttribute('data-position', pos);
+        selectedPinForEdit.setAttribute('data-normal', norm);
+        infoDesc.innerText = `Pin ${selectedPinForEdit.innerText} moved! Tap the next number or tap Copy Pin Code.`;
+      }
+    });
+
+    function copyPinPositions() {
+      const lines = Array.from(allHotspots).map(pin => {
+        return `Pin ${pin.innerText}: data-position="${pin.dataset.position}" data-normal="${pin.dataset.normal}"`;
+      }).join('\n');
+      navigator.clipboard.writeText(lines);
+      copyPinsBtn.innerText = '✔️ Copied!';
+      setTimeout(() => { copyPinsBtn.innerText = '📋 Copy Pin Code'; }, 2000);
     }
 
     function toggleTheme() {
@@ -399,16 +528,6 @@
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
     }
-
-    viewer.addEventListener('click', (event) => {
-      if (!event.shiftKey) return;
-      const hit = viewer.positionAndNormalFromPoint(event.clientX, event.clientY);
-      if (hit) {
-        const pos = `${hit.position.x.toFixed(3)}m ${hit.position.y.toFixed(3)}m ${hit.position.z.toFixed(3)}m`;
-        const norm = `${hit.normal.x.toFixed(3)}m ${hit.normal.y.toFixed(3)}m ${hit.normal.z.toFixed(3)}m`;
-        console.log(`data-position="${pos}" data-normal="${norm}"`);
-      }
-    });
 
     window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
   </script>
