@@ -405,4 +405,27 @@
       const zoomDistance = btn.dataset.zoom || '1.0m';
       if (targetPos) {
         viewer.cameraTarget = targetPos;
-        viewer.cameraOrbit = `0deg
+        viewer.cameraOrbit = `0deg 75deg ${zoomDistance}`;
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark');
+      themeToggle.innerText = isDark ? '☀️' : '🌙';
+    }
+
+    function playAudio() {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(`${infoTitle.innerText}. ${infoDesc.innerText}`);
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice = voices.find(v => v.lang === 'en-GB' || v.lang === 'en-IN') || voices[1];
+
+      if (preferredVoice) utterance.voice = preferredVoice;
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  </script>
+</body>
+</html>
